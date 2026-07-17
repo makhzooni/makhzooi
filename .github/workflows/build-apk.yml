@@ -1,0 +1,49 @@
+name: بناء APK تلقائياً
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: بناء APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        working-directory: flutter_inventory
+
+    steps:
+      - name: تنزيل الكود
+        uses: actions/checkout@v4
+
+      - name: إعداد Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: إعداد Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: تثبيت المكتبات
+        run: flutter pub get
+
+      - name: توليد كود قاعدة البيانات
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: بناء APK
+        run: flutter build apk --release --no-shrink
+
+      - name: رفع APK للتنزيل
+        uses: actions/upload-artifact@v4
+        with:
+          name: مخزوني-APK
+          path: flutter_inventory/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
