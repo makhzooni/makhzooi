@@ -25,9 +25,7 @@ dependencies:
   # UI & Fonts
   google_fonts: ^6.2.1
   flutter_animate: ^4.5.0
-  cached_network_image: ^3.3.1
   shimmer: ^3.0.0
-  flutter_staggered_grid_view: ^0.7.0
   badges: ^3.1.2
 
   # Image handling
@@ -45,6 +43,7 @@ dependencies:
 
   # Export
   excel: ^4.0.2
+  share_plus: ^9.0.0
 
   # Utilities
   uuid: ^4.4.2
@@ -53,12 +52,7 @@ dependencies:
   path: ^1.9.0
   equatable: ^2.0.5
   dartz: ^0.10.1
-  dio: ^5.4.3+1
-  connectivity_plus: ^6.0.5
-
-  # HTTP / AI Search
   http: ^1.2.1
-  mime: ^1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -67,23 +61,9 @@ dev_dependencies:
   drift_dev: ^2.18.0
   build_runner: ^2.4.9
   riverpod_generator: ^2.4.3
-  custom_lint: ^0.6.4
-  riverpod_lint: ^2.3.10
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
     - assets/icons/
-
-  fonts:
-    - family: Cairo
-      fonts:
-        - asset: assets/fonts/Cairo-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Cairo-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Cairo-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Cairo-Bold.ttf
-          weight: 700
