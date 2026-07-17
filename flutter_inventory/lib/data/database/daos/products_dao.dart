@@ -58,7 +58,7 @@ class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin 
     return (select(productsTable)
           ..where((p) =>
               p.isActive.equals(true) &
-              p.quantity.isSmallerOrEqualValue(p.lowStockThreshold as Object)))
+              p.quantity.isSmallerOrEqual(p.lowStockThreshold)))
         .watch();
   }
 

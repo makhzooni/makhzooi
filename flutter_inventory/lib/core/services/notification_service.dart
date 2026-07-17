@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Color;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../constants/app_constants.dart';
 import '../../main.dart';
@@ -41,10 +42,12 @@ class NotificationService {
       styleInformation: BigTextStyleInformation(''),
     );
 
-    const NotificationDetails details = NotificationDetails(android: androidDetails);
+    const NotificationDetails details =
+        NotificationDetails(android: androidDetails);
 
     await flutterLocalNotificationsPlugin.show(
-      AppConstants.lowStockNotificationId + productName.hashCode.abs() % 1000,
+      AppConstants.lowStockNotificationId +
+          productName.hashCode.abs() % 1000,
       '⚠️ تنبيه نقص المخزون',
       'المنتج "$productName" وصل إلى $quantity وحدة (الحد الأدنى: $threshold)',
       details,
@@ -55,9 +58,4 @@ class NotificationService {
   static Future<void> cancelAll() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
-}
-
-class Color {
-  final int value;
-  const Color(this.value);
 }

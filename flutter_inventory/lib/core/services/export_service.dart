@@ -10,17 +10,10 @@ class ExportService {
   static Future<String?> exportToExcel(List<Product> products) async {
     try {
       final excel = Excel.createExcel();
-      final sheet = excel['المنتجات'];
+      final sheetName = 'المنتجات';
+      final sheet = excel[sheetName];
 
       // --- ترويسة الجدول ---
-      final headerStyle = CellStyle(
-        bold: true,
-        horizontalAlign: HorizontalAlign.Center,
-        backgroundColorHex: ExcelColor.fromHexString('#1565C0'),
-        fontColorHex: ExcelColor.fromHexString('#FFFFFF'),
-        fontSize: 12,
-      );
-
       final headers = [
         'اسم المنتج',
         'الوصف',
@@ -32,9 +25,16 @@ class ExportService {
       ];
 
       for (int i = 0; i < headers.length; i++) {
-        final cell = sheet.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
+        final cell = sheet.cell(
+            CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
         cell.value = TextCellValue(headers[i]);
-        cell.cellStyle = headerStyle;
+        cell.cellStyle = CellStyle(
+          bold: true,
+          horizontalAlign: HorizontalAlign.Center,
+          backgroundColorHex: ExcelColor.fromHexString('#1565C0'),
+          fontColorHex: ExcelColor.fromHexString('#FFFFFF'),
+          fontSize: 12,
+        );
       }
 
       // --- بيانات المنتجات ---
@@ -43,12 +43,9 @@ class ExportService {
         final product = products[rowIndex];
         final row = rowIndex + 1;
 
-        final rowStyle = CellStyle(
-          horizontalAlign: HorizontalAlign.Right,
-          backgroundColorHex: row % 2 == 0
-              ? ExcelColor.fromHexString('#F5F7FA')
-              : ExcelColor.fromHexString('#FFFFFF'),
-        );
+        final bgColor = row % 2 == 0
+            ? ExcelColor.fromHexString('#F5F7FA')
+            : ExcelColor.fromHexString('#FFFFFF');
 
         final rowData = [
           product.name,
@@ -65,24 +62,31 @@ class ExportService {
             CellIndex.indexByColumnRow(columnIndex: colIndex, rowIndex: row),
           );
           cell.value = TextCellValue(rowData[colIndex]);
-          cell.cellStyle = rowStyle;
+          cell.cellStyle = CellStyle(
+            horizontalAlign: HorizontalAlign.Right,
+            backgroundColorHex: bgColor,
+          );
         }
       }
 
       // --- ضبط عرض الأعمدة ---
-      sheet.setColumnWidth(0, 30); // اسم المنتج
-      sheet.setColumnWidth(1, 40); // الوصف
-      sheet.setColumnWidth(2, 12); // الكمية
-      sheet.setColumnWidth(3, 15); // السعر
-      sheet.setColumnWidth(4, 20); // التصنيف
-      sheet.setColumnWidth(5, 15); // حد التنبيه
-      sheet.setColumnWidth(6, 20); // تاريخ الإنشاء
+      sheet.setColumnWidth(0, 30);
+      sheet.setColumnWidth(1, 40);
+      sheet.setColumnWidth(2, 12);
+      sheet.setColumnWidth(3, 15);
+      sheet.setColumnWidth(4, 20);
+      sheet.setColumnWidth(5, 15);
+      sheet.setColumnWidth(6, 20);
 
       // --- حفظ الملف ---
-      final dir = await getExternalStorageDirectory() ??
-          await getApplicationDocumentsDirectory();
+      Directory? dir;
+      try {
+        dir = await getExternalStorageDirectory();
+      } catch (_) {}
+      dir ??= await getApplicationDocumentsDirectory();
+
       final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final filename = 'مخزوني_$timestamp.xlsx';
+      final filename = 'inventory_$timestamp.xlsx';
       final filePath = p.join(dir.path, filename);
 
       final fileBytes = excel.save();

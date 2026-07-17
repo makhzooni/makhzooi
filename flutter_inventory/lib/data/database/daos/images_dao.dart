@@ -16,8 +16,10 @@ class ImagesDao extends DatabaseAccessor<AppDatabase> with _$ImagesDaoMixin {
   }
 
   Future<ImagesTableData> insertImage(ImagesTableCompanion image) async {
-    final id = await into(imagesTable).insert(image);
-    return (select(imagesTable)..where((i) => i.id.equals(id))).getSingle();
+    final rowId = await into(imagesTable).insert(image);
+    return (select(imagesTable)
+          ..where((i) => i.id.equals(rowId)))
+        .getSingle();
   }
 
   Future<void> deleteImage(int id) async {
@@ -25,7 +27,8 @@ class ImagesDao extends DatabaseAccessor<AppDatabase> with _$ImagesDaoMixin {
   }
 
   Future<void> deleteAllProductImages(String productId) async {
-    await (delete(imagesTable)..where((i) => i.productId.equals(productId)))
+    await (delete(imagesTable)
+          ..where((i) => i.productId.equals(productId)))
         .go();
   }
 
