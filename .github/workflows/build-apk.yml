@@ -3,17 +3,13 @@ name: بناء APK تلقائياً
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:
+  workflow_dispatch:  # يسمح بتشغيل يدوي من GitHub
 
 jobs:
   build:
     name: بناء APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    defaults:
-      run:
-        working-directory: flutter_inventory
 
     steps:
       - name: تنزيل الكود
@@ -39,11 +35,17 @@ jobs:
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: بناء APK
-        run: flutter build apk --release --no-shrink
+        run: flutter build apk --release
 
       - name: رفع APK للتنزيل
         uses: actions/upload-artifact@v4
         with:
           name: مخزوني-APK
-          path: flutter_inventory/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
+
+      - name: عرض رابط التنزيل
+        run: |
+          echo "✅ تم بناء APK بنجاح!"
+          echo "📱 اذهب إلى: Actions → أحدث تشغيل → Artifacts → مخزوني-APK"
+          echo "📥 اضغط على الملف لتنزيل APK"
